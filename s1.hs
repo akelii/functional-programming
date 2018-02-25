@@ -52,6 +52,23 @@ sundays1 start end = sundays' start 1
 				nextY 	= if m == 12 then y + 1 else y
 				nextM 	= if m == 12 then 1 else m + 1
 				rest	= sundays' nextY nextM
+				
+{-
+	Question 3
+	``````````
+	~> tail recursive function of 'sundays1' is implemented below.
+	Accumulator carries the last result at the end of the recursion
+-}
+tailSundays1 :: Integer -> Integer -> Integer
+tailSundays1 start end = sundays' 0 start 1
+	where
+		sundays' :: Integer -> Integer -> Integer -> Integer
+		sundays' acc y m
+			| y > end 	= acc
+			| otherwise	= if dayOfWeek y m 1 == 1 then sundays' (acc + 1) nextY nextM else sundays' acc nextY nextM 
+			where
+				nextY 	= if m == 12 then y + 1 else y
+				nextM 	= if m == 12 then 1 else m + 1
 
 
 
