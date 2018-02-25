@@ -73,7 +73,8 @@ tailSundays1 start end = sundays' 0 start 1
 {-
 	Question 4
 	``````````
-	
+	~> "sundays2" calculates number of sundays without Zeller's congruence
+	math formula. It uses "leap" and  "daysInMonth" functions.
 -}
 leap :: Integer -> Bool
 leap y
@@ -104,3 +105,36 @@ sundays2 start end = sundays' start 1 2
 				days 	= ds + (daysInMonth m y) `mod` 7
 				rest	= sundays' nextY nextM days
 
+{-
+	Question 5
+	``````````
+	~> If the non centrury year is divisible by 4, then it is a leap year.
+	For example, in 100 years, there should be 25 leap years like 4, 8, 12, ... , 100.
+	However for the centrury year, if it is divisible by 400, it is a leap year;
+	otherwise not. So 100 is not divisible by 400, it is not leap year.
+	
+	In 100 years, there are 25-1=24 leap years. And in 400 year, 4*24 = 96;
+	and +1 year for 400th year (it is divisible by 400). Totally, 97 leap years occurs.
+	
+	Every 400 years, there are (400*365 = 146,000) + 97 days -> 146097 days and
+	there are 20871 weeks (146097 is divisible by 7)
+	
+	As a result, each days of week repeat 20871 times (total num of weeks).
+	In other words, sunday occurs 20871 times in 400 year period.
+	And same way, other days like monday, tuesday ... etc occurs 20871 times in 400 years.
+	
+	For any day of month, the probobilty, which certain day of month is a 
+	sunday or any day, will be 1/7. Bacause as I said, number of 'days of week'
+	are equal: 20871 in 146097.
+	
+	But another view is that, all 'day of month' are not equal. For example,
+	29th February exists 97 times in 400 year; however normal days like 23th April
+	exists 400 times in 400 years. So it breaks the possibility of 1/7. 
+	Even if we have equal number of 'day of week', we have not equal 'day of month'.
+	In this point, I thought that there is a  inconsistency in the question.
+	
+	As I said, normal days like 23th April exists 400 times in 400 years and
+	400 is not divisible by 7. So same 'day of month' (lets say 23th April) 
+	could not appear every 'day of week' in same probability, even if total
+	number of days (146097) is divisible by 7. 
+-}
