@@ -91,4 +91,16 @@ daysInMonth m y = case m of
 	2  -> if leap y == True then 29 else 28
 	_  -> 31
 
+sundays2 :: Integer -> Integer -> Integer
+sundays2 start end = sundays' start 1 2
+	where
+		sundays' :: Integer -> Integer -> Integer -> Integer
+		sundays' y m ds --year, month, days(weekday)
+			| y > end 	= 0
+			| otherwise	= if days `mod` 7 == 0 then rest + 1 else rest
+			where
+				nextY 	= if m == 12 then y + 1 else y
+				nextM 	= if m == 12 then 1 else m + 1
+				days 	= ds + (daysInMonth m y) `mod` 7
+				rest	= sundays' nextY nextM days
 
