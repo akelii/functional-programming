@@ -16,8 +16,8 @@ dayOfWeek y m d = z `mod` 7
 		j = y' `div` 100
 		m'= takeNewM m
 		t1 = floor (fromIntegral (13 * (m' + 1)) / 5.0)
-		t2 = floor (fromIntegral (k) / 4.0)
-		t3 = floor (fromIntegral (j) / 4.0)
+		t2 = floor (fromIntegral k / 4.0)
+		t3 = floor (fromIntegral j / 4.0)
 		z  = d + t1 + k + t2 + t3 + 5 * j
 		takeNewM :: Integer -> Integer
 		takeNewM m
@@ -52,7 +52,7 @@ sundays1 start end = sundays' start 1
 				nextY 	= if m == 12 then y + 1 else y
 				nextM 	= if m == 12 then 1 else m + 1
 				rest	= sundays' nextY nextM
-				
+
 {-
 	Question 3
 	``````````
@@ -91,7 +91,7 @@ daysInMonth m y = case m of
 	11 -> 30
 	2  -> if leap y == True then 29 else 28
 	_  -> 31
-
+	
 sundays2 :: Integer -> Integer -> Integer
 sundays2 start end = sundays' start 1 2
 	where
@@ -104,7 +104,7 @@ sundays2 start end = sundays' start 1 2
 				nextM 	= if m == 12 then 1 else m + 1
 				days 	= ds + (daysInMonth m y) `mod` 7
 				rest	= sundays' nextY nextM days
-
+				
 {-
 	Question 5
 	``````````
@@ -138,3 +138,8 @@ sundays2 start end = sundays' start 1 2
 	could not appear every 'day of week' in same probability, even if total
 	number of days (146097) is divisible by 7. 
 -}
+
+
+
+
+
