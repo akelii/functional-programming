@@ -7,8 +7,8 @@
 -}
 
 {-
-	Question 1
-	``````````
+	Part #1
+	```````
 	~> 'dayOfWeek' implementation uses Zeller's congruence which takes 
 	year, month and day respectively. Note that:
 		(0= Saturday, 1= Sunday, 2= Monday, ... , 6= Friday) and
@@ -41,8 +41,8 @@ dayOfWeek y m d = z `mod` 7
 			| otherwise	= y			
 
 {-
-	Question 2
-	``````````
+	Part #2
+	```````
 	~> What does the helper function (sundays') calculate?
 		:: (sundays') calculates number of sundays in certain month and 
 		certain year. But it is recursive function, so it repeats this 
@@ -66,8 +66,8 @@ sundays1 start end = sundays' start 1
 				rest	= sundays' nextY nextM
 
 {-
-	Question 3
-	``````````
+	Part #3
+	```````
 	~> tail recursive function of 'sundays1' is implemented below.
 	Accumulator carries the last result at the end of the recursion
 -}
@@ -83,8 +83,8 @@ tailSundays1 start end = sundays' 0 start 1
 				nextM 	= if m == 12 then 1 else m + 1
 
 {-
-	Question 4
-	``````````
+	Part #4
+	```````
 	~> "sundays2" calculates number of sundays without Zeller's congruence
 	math formula. It uses "leap" and  "daysInMonth" functions.
 -}
@@ -118,8 +118,8 @@ sundays2 start end = sundays' start 1 2
 				rest	= sundays' nextY nextM days
 				
 {-
-	Question 5
-	``````````
+	Part #5
+	```````
 	~> If the non centrury year is divisible by 4, then it is a leap year.
 	For example, in 100 years, there should be 25 leap years like 4, 8, 12, ... , 100.
 	However for the centrury year, if it is divisible by 400, it is a leap year;
@@ -150,8 +150,3 @@ sundays2 start end = sundays' start 1 2
 	could not appear every 'day of week' in same probability, even if total
 	number of days (146097) is divisible by 7. 
 -}
-
-
-
-
-
