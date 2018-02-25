@@ -70,5 +70,25 @@ tailSundays1 start end = sundays' 0 start 1
 				nextY 	= if m == 12 then y + 1 else y
 				nextM 	= if m == 12 then 1 else m + 1
 
+{-
+	Question 4
+	``````````
+	
+-}
+leap :: Integer -> Bool
+leap y
+	| y `mod` 400 	== 0 = True
+	| y `mod` 100 	== 0 = False
+	| y `mod` 4		== 0 = True
+	| otherwise			 = False
+
+daysInMonth :: Integer -> Integer -> Integer
+daysInMonth m y = case m of
+	4  -> 30
+	6  -> 30
+	9  -> 30
+	11 -> 30
+	2  -> if leap y == True then 29 else 28
+	_  -> 31
 
 
