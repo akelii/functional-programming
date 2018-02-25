@@ -1,4 +1,12 @@
 {-
+	Elif AK
+	150130009
+	26.02.2018
+	
+	Functional Programming Exercise #1 in Haskell
+-}
+
+{-
 	Question 1
 	``````````
 	~> 'dayOfWeek' implementation uses Zeller's congruence which takes 
@@ -7,6 +15,10 @@
 		(3= March, 4= April, 5= May, ... , 14= February)
 	so that if month is January or February then it is summed with 12,
 	and year is substracted by 1. (Zeller's implementation) 
+	The python implementation and javascript implementation on
+	Zeller's congruence do not include the 'year substraction'. I add the
+	substraction according to Zeller's formula.
+	If it is not added, the result will not correct for January and February.
 -}
 dayOfWeek :: Integer -> Integer -> Integer -> Integer
 dayOfWeek y m d = z `mod` 7
