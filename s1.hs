@@ -28,8 +28,30 @@ dayOfWeek y m d = z `mod` 7
 			| m <= 2 	= y - 1
 			| otherwise	= y			
 
-
-
+{-
+	Question 2
+	``````````
+	~> What does the helper function (sundays') calculate?
+		:: (sundays') calculates number of sundays in certain month and 
+		certain year. But it is recursive function, so it repeats this 
+		process until reach base case which is upper bound of the year (end). 
+		As a result, (sundays1) return all sundays count in given year interval. 
+		
+	~> What if you don't define a "rest" and use its expression where it's needed?
+		:: Doesn' matter. We can use as its expression instead of "rest" without 
+		thinking parenthesis (operation priority). It works as same way.
+-}
+sundays1 :: Integer -> Integer -> Integer
+sundays1 start end = sundays' start 1
+	where
+		sundays' :: Integer -> Integer -> Integer
+		sundays' y m
+			| y > end 	= 0
+			| otherwise	= if dayOfWeek y m 1 == 1 then rest + 1 else rest
+			where
+				nextY 	= if m == 12 then y + 1 else y
+				nextM 	= if m == 12 then 1 else m + 1
+				rest	= sundays' nextY nextM
 
 
 
