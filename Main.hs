@@ -1,4 +1,4 @@
-import System.Random
+import Data.Char
 
 data Color = Red | Black 
     deriving (Show, Eq)
@@ -21,12 +21,12 @@ cardColor c
     | otherwise = Black
 
 cardValue :: Card -> Int
-cardValue c
-    | rank c == Ace = 11
-    | rank c == Jack = 10
-    | rank c == Queen = 10
-    | rank c == King = 10
-    | otherwise = 2
+cardValue c = case rank c of
+                Num x -> x
+                Ace   -> 11
+                Jack  -> 10
+                Queen -> 10
+                King  -> 10
 
 removeCard :: [Card] -> Card -> [Card]
 removeCard [] _    = []
@@ -87,3 +87,53 @@ convertSuit c
     | c `elem` "sS" = Spades
     | otherwise = error "Unknown Suit"
 
+convertRank :: Char -> Rank
+convertRank c
+    | c `elem` "jJ" = Jack
+    | c `elem` "qQ" = Queen
+    | c `elem` "kK" = King
+    | c `elem` "tT" = Num 10
+    | isDigit c     = if digitToInt c == 1 then Ace else Num (digitToInt c)
+    | otherwise     = error "Unknown Rank"
+
+convertCard :: Char -> Char -> Card
+convertCard s r = Card {suit=convertSuit s, rank=convertRank r}
+
+{-Dummy readCards function-}
+readCards :: IO [Card]
+readCards = return [Card {suit=Clubs, rank=Ace}, Card {suit=Spades, rank=Ace}, Card {suit=Clubs, rank=Ace}, Card {suit=Spades, rank=Ace}]
+
+{-readCards :: IO [Card]
+readCards = return (returnCardList [])
+    where 
+        returnCardList :: [Card] -> [Card]
+        returnCardList acc =  do line <- getLine
+                                 if line == "."
+                                 then acc
+                                 else returnCardList ((convertCard (line !! 0) (line !! 1)):acc)-}
+
+convertMove :: Char -> Char -> Char -> Move
+convertMove name suit rank
+    | name `elem` "dD" = Draw
+    | name `elem` "rR" = Discard (convertCard suit rank)
+    | otherwise        = error "Invalid Move"
+
+{-Dummy readMoves function-}
+readMoves :: IO [Move]
+readMoves = return [Draw, Draw, Draw, Draw, Draw]
+
+main = do putStrLn "Enter cards:"
+          cards <- readCards
+          putStrLn (show cards)
+
+          putStrLn "Enter moves:"
+          moves <- readMoves
+          putStrLn (show moves)
+
+          putStrLn "Enter goal:"
+          line <- getLine
+
+          let goal = read line :: Int
+
+          let score = runGame cards moves goal
+          putStrLn ("Score: " ++ show score)
