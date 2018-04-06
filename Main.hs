@@ -99,18 +99,16 @@ convertRank c
 convertCard :: Char -> Char -> Card
 convertCard s r = Card {suit=convertSuit s, rank=convertRank r}
 
-{-Dummy readCards function-}
+{- The readCards implementation is improved by using 
+stackoverflow.com/questions/49697277/read-io-string-and-return-custom-data-type-list-in-haskell/49697507 -}
 readCards :: IO [Card]
-readCards = return [Card {suit=Clubs, rank=Ace}, Card {suit=Spades, rank=Ace}, Card {suit=Clubs, rank=Ace}, Card {suit=Spades, rank=Ace}]
-
-{-readCards :: IO [Card]
-readCards = return (returnCardList [])
+readCards = returnCardList []
     where 
-        returnCardList :: [Card] -> [Card]
+        returnCardList :: [Card] -> IO [Card]
         returnCardList acc =  do line <- getLine
                                  if line == "."
-                                 then acc
-                                 else returnCardList ((convertCard (line !! 0) (line !! 1)):acc)-}
+                                 then return acc
+                                 else returnCardList ((convertCard (line !! 0) (line !! 1)):acc)
 
 convertMove :: Char -> Char -> Char -> Move
 convertMove name suit rank
@@ -118,9 +116,14 @@ convertMove name suit rank
     | name `elem` "rR" = Discard (convertCard suit rank)
     | otherwise        = error "Invalid Move"
 
-{-Dummy readMoves function-}
 readMoves :: IO [Move]
-readMoves = return [Draw, Draw, Draw, Draw, Draw]
+readMoves = returnMoveList []
+    where 
+        returnMoveList :: [Move] -> IO [Move]
+        returnMoveList acc =  do line <- getLine
+                                 if line == "."
+                                 then return acc
+                                 else returnMoveList ((convertMove (line !! 0) (line !! 1) (line !! 2)):acc)
 
 main = do putStrLn "Enter cards:"
           cards <- readCards
