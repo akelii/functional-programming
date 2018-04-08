@@ -29,7 +29,7 @@ cardValue c = case rank c of
                 King  -> 10
 
 removeCard :: [Card] -> Card -> [Card]
-removeCard [] _    = []
+removeCard [] _    = error "Card list is empty!"
 removeCard [a] c'
     | a == c'   = []
     | otherwise = error "The card is not in list!"
@@ -72,7 +72,7 @@ runGame (c:cs) ms g = runState State {cardList=(c:cs), heldCards=[], goal=g, mov
             where
                 makeDraw :: Int
                 makeDraw
-                    | length (cardList s)  == 1     = score (head(cardList s):heldCards(s)) g
+                    | length (cardList s)  == 0     = score (heldCards s) g
                     | sumCards (head(cardList s):heldCards(s)) > g = score (head(cardList s):heldCards(s)) g
                     | otherwise                     = runState State {goal=g, moveList=tail (moveList s), cardList=tail (cardList s), heldCards=(head (cardList s):heldCards(s))}
                 makeDiscard :: Move -> Int
@@ -108,7 +108,7 @@ readCards = returnCardList []
         returnCardList acc =  do line <- getLine
                                  if line == "."
                                  then return acc
-                                 else returnCardList ((convertCard (line !! 0) (line !! 1)):acc)
+                                 else returnCardList (acc ++ [(convertCard (line !! 0) (line !! 1))])
 
 convertMove :: Char -> Char -> Char -> Move
 convertMove name suit rank
@@ -123,7 +123,7 @@ readMoves = returnMoveList []
         returnMoveList acc =  do line <- getLine
                                  if line == "."
                                  then return acc
-                                 else returnMoveList ((convertMove (line !! 0) (line !! 1) (line !! 2)):acc)
+                                 else returnMoveList (acc ++ [(convertMove (line !! 0) (line !! 1) (line !! 2))])
 
 main = do putStrLn "Enter cards:"
           cards <- readCards
