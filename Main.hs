@@ -11,3 +11,6 @@ wordCharCounts cs = nub (zip cs' ns)
     where
         ns  = map (\x -> length (filter (==x) cs')) cs'
         cs' = map toLower cs
+
+sentenceCharCounts :: Sentence -> CharCount
+sentenceCharCounts = wordCharCounts . concat
