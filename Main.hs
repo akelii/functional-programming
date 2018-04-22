@@ -14,3 +14,6 @@ wordCharCounts cs = nub (zip cs' ns)
 
 sentenceCharCounts :: Sentence -> CharCount
 sentenceCharCounts = wordCharCounts . concat
+
+dictCharCounts :: [Word] -> [CharCount]
+dictCharCounts = map wordCharCounts
