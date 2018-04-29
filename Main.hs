@@ -22,5 +22,13 @@ wordCharCounts cs = sortBy cmp (nub $ zip cs' ns)
 sentenceCharCounts :: Sentence -> CharCount
 sentenceCharCounts = wordCharCounts . concat
 
-dictCharCounts :: [Word] -> [CharCount]
-dictCharCounts = map wordCharCounts
+{-
+File read operations is implemented using the link below:
+learnyouahaskell.com/input-and-output
+-}
+dictCharCounts :: IO [(Word, CharCount)]
+dictCharCounts = do handle <- openFile "words.txt" ReadMode
+                    contents <- hGetContents handle
+                    let ws   = lines contents  -- Get lines from content as words(ws) 
+                        wccs = zip ws $ map wordCharCounts ws -- WordCharCounts (wccs)
+                    return wccs
