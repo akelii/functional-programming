@@ -38,3 +38,6 @@ dictWordsByCharCounts wccs = map wfcc (nub $ map (\x -> filter ((==x).snd) wccs)
     where
         wfcc :: [(Word, CharCount)] -> (CharCount, [Word]) --wfcc stand for WordsFromCharCount
         wfcc ps@(p:ps') = (snd p, map fst ps)
+
+wordAnagrams :: Word -> [(CharCount, [Word])] -> [Word]
+wordAnagrams w (x:xs) = if wordCharCounts w == fst x then snd x else wordAnagrams w xs
