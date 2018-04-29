@@ -32,3 +32,9 @@ dictCharCounts = do handle <- openFile "words.txt" ReadMode
                     let ws   = lines contents  -- Get lines from content as words(ws) 
                         wccs = zip ws $ map wordCharCounts ws -- WordCharCounts (wccs)
                     return wccs
+
+dictWordsByCharCounts :: [(Word, CharCount)] -> [(CharCount, [Word])]
+dictWordsByCharCounts wccs = map wfcc (nub $ map (\x -> filter ((==x).snd) wccs) (map snd wccs))
+    where
+        wfcc :: [(Word, CharCount)] -> (CharCount, [Word]) --wfcc stand for WordsFromCharCount
+        wfcc ps@(p:ps') = (snd p, map fst ps)
