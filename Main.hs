@@ -59,3 +59,11 @@ extend (c:cs) = if snd c > 1 then c:cs' else c:cs''
         cs' = extend (c':cs)
         c'  = (fst c, (snd c) - 1)
         cs''= extend cs
+
+subtractCounts :: CharCount -> CharCount -> CharCount
+subtractCounts [] _       = []
+subtractCounts _ []       = []
+subtractCounts (c:cs) cs' = if findResult == 0 then c:(subtractCounts cs cs') else if snd newTuple == 0 then  subtractCounts cs cs' else newTuple:(subtractCounts cs cs')
+    where
+        findResult   = maybe 0 snd (find (\x -> fst x == fst c) cs')
+        newTuple     = (fst c, ((snd c) - findResult))
