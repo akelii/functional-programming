@@ -34,10 +34,10 @@ dictCharCounts = do handle <- openFile "words.txt" ReadMode
                     return wccs
 
 dictWordsByCharCounts :: [(Word, CharCount)] -> [(CharCount, [Word])]
-dictWordsByCharCounts wccs = map wfcc (nub $ map (\x -> filter ((==x).snd) wccs) (map snd wccs))
+dictWordsByCharCounts xs@(x:xs') = newNode:(dictWordsByCharCounts xs)
     where
-        wfcc :: [(Word, CharCount)] -> (CharCount, [Word]) --wfcc stand for WordsFromCharCount
-        wfcc ps@(p:ps') = (snd p, map fst ps)
+        newNode   = (snd x, (findEq x))
+        findEq cc = map fst $ filter (\x -> snd x == snd cc) xs
 
 wordAnagrams :: Word -> [(CharCount, [Word])] -> [Word]
 wordAnagrams w (x:xs) = if wordCharCounts w == fst x then snd x else wordAnagrams w xs
