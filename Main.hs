@@ -7,6 +7,7 @@ import System.IO
 type Word = String
 type Sentence = [Word]
 type CharCount = [(Char, Int)]
+type Dictionary = [(Word, CharCount)]
 
 {-
 cmp function is implemented using the link below (for usage of fst and snd):
@@ -65,3 +66,30 @@ subtractCounts (c:cs) cs' = if findResult == 0 then c:(subtractCounts cs cs') el
     where
         findResult   = maybe 0 snd (find (\x -> fst x == fst c) cs')
         newTuple     = (fst c, ((snd c) - findResult))
+
+sentenceAnagrams :: Sentence -> Dictionary -> [Sentence]
+sentenceAnagrams s dic = test dic $ sentenceCharCounts s
+    where
+        test :: Dictionary -> CharCount -> [[Word]]
+        test dic cc =  test3 $ test' cc
+        test' :: CharCount -> [([Word], CharCount)]
+        test' []  = []
+        test' cc' = let words = filter (\x -> x /= []) $ map (dictWordsByCharCounts dic) (charCountsSubsets cc')
+                        rests = map (\x -> subtractCounts cc' (wordCharCounts $ x !! 0)) words
+                        in zip words rests
+        test3 :: [([Word], CharCount)] -> [[Word]]
+        test3 []         = []
+        test3 xs@(x:xs') = (test2 x) ++ (test3 xs')
+        test2 :: ([Word], CharCount) -> [[Word]]
+        test2 (ws,[]) = [ws]
+        test2 (_,x)   = test3 $ test' x
+
+--Example input for test: ["I", "love", "you"]
+main = do 
+    putStrLn "Hello"
+    dic <- dictCharCounts
+    line <- getLine
+
+    let ss = read line :: Sentence
+    let testResult = sentenceAnagrams ss dic
+    print testResult
