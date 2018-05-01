@@ -41,3 +41,21 @@ dictWordsByCharCounts wccs = map wfcc (nub $ map (\x -> filter ((==x).snd) wccs)
 
 wordAnagrams :: Word -> [(CharCount, [Word])] -> [Word]
 wordAnagrams w (x:xs) = if wordCharCounts w == fst x then snd x else wordAnagrams w xs
+
+charCountsSubsets :: CharCount -> [CharCount]
+charCountsSubsets ccs = charCountsSubsets' $ extend ccs 
+    where
+        charCountsSubsets' []          = [[]]
+        charCountsSubsets' (x:xs)      = charCountsSubsets' xs ++ filter (not . isIncludesDublicates) (map (sortBy cmp) (map (x:) (charCountsSubsets' xs)))
+        isIncludesDublicates []        = False
+        isIncludesDublicates [c]       = False
+        isIncludesDublicates (c':c:cs) = if fst c' == fst c then True else isIncludesDublicates (c:cs)
+        cmp = comparing fst
+
+extend :: [(Char,Int)] -> [(Char,Int)]
+extend []     = []
+extend (c:cs) = if snd c > 1 then c:cs' else c:cs''
+    where
+        cs' = extend (c':cs)
+        c'  = (fst c, (snd c) - 1)
+        cs''= extend cs
