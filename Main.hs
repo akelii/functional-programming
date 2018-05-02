@@ -67,22 +67,29 @@ subtractCounts (c:cs) cs' = if findResult == 0 then c:(subtractCounts cs cs') el
         findResult   = maybe 0 snd (find (\x -> fst x == fst c) cs')
         newTuple     = (fst c, ((snd c) - findResult))
 
-sentenceAnagrams :: Sentence -> Dictionary -> [Sentence]
-sentenceAnagrams s dic = test dic $ sentenceCharCounts s
+sentenceAnagrams :: Sentence -> Dictionary -> [[Sentence]]
+sentenceAnagrams s dic = map dropDash getSentenceWords
     where
-        test :: Dictionary -> CharCount -> [[Word]]
-        test dic cc =  test3 $ test' cc
+        getSentenceWords = filter isIncludesDash (test dic $ sentenceCharCounts s)
+        test :: Dictionary -> CharCount -> [[[Word]]]
+        test dic cc =  map test4 (test' cc)
         test' :: CharCount -> [([Word], CharCount)]
         test' []  = []
         test' cc' = let words = filter (\x -> x /= []) $ map (dictWordsByCharCounts dic) (charCountsSubsets cc')
                         rests = map (\x -> subtractCounts cc' (wordCharCounts $ x !! 0)) words
                         in zip words rests
+        test4 :: ([Word], CharCount) -> [[Word]]
+        test4 wcc = [fst wcc] ++ (test3 $ test' (snd wcc))
         test3 :: [([Word], CharCount)] -> [[Word]]
         test3 []         = []
-        test3 xs@(x:xs') = (test2 x) ++ (test3 xs')
+        test3 xs@(x:xs') = (test2 x) ++ [(fst x)]
         test2 :: ([Word], CharCount) -> [[Word]]
-        test2 (ws,[]) = [ws]
+        test2 (ws,[]) = [["-"]]
         test2 (_,x)   = test3 $ test' x
+        isIncludesDash []        = False
+        isIncludesDash (c:cs) = if c == ["-"] then True else isIncludesDash cs
+        dropDash :: [Sentence] -> [Sentence]
+        dropDash ss = filter (\x -> x /= ["-"]) ss
 
 --Example input for test: ["I", "love", "you"]
 main = do 
