@@ -67,8 +67,8 @@ subtractCounts (c:cs) cs' = if findResult == 0 then c:(subtractCounts cs cs') el
         findResult   = maybe 0 snd (find (\x -> fst x == fst c) cs')
         newTuple     = (fst c, ((snd c) - findResult))
 
-sentenceAnagrams :: Sentence -> Dictionary -> [[Sentence]]
-sentenceAnagrams s dic = map dropDash getSentenceWords
+sentenceAnagrams :: Sentence -> Dictionary -> [String]
+sentenceAnagrams s dic = createPureSentence $ addPermutations (concat $ map createSentence $ map dropDash getSentenceWords)
     where
         getSentenceWords = filter isIncludesDash (test dic $ sentenceCharCounts s)
         test :: Dictionary -> CharCount -> [[[Word]]]
@@ -91,6 +91,20 @@ sentenceAnagrams s dic = map dropDash getSentenceWords
         dropDash :: [Sentence] -> [Sentence]
         dropDash ss = filter (\x -> x /= ["-"]) ss
 
+createSentence :: [[Word]] -> [Sentence]
+createSentence xs@(x:xs') = transpose $ map (\c -> expand (lcm' `div` (length c)) c) xs
+    where
+        expand :: Int -> [Word] -> [Word]
+        expand 1 ws = ws
+        expand i ws = ws ++ expand  (i-1) ws
+        lcm' = foldr1 (\a b -> lcm a b) (map length xs)
+
+createPureSentence :: [Sentence] -> [String]
+createPureSentence = map $ intercalate " "
+
+addPermutations :: [Sentence] -> [Sentence]
+addPermutations ss = concat $ map permutations ss
+
 --Example input for test: ["I", "love", "you"]
 main = do 
     putStrLn "Hello"
@@ -99,4 +113,5 @@ main = do
 
     let ss = read line :: Sentence
     let testResult = sentenceAnagrams ss dic
-    print testResult
+
+    mapM_ putStrLn testResult
