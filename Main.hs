@@ -3,6 +3,7 @@ import Data.Char
 import Data.List
 import Data.Ord
 import System.IO
+import System.Environment
 
 type Word = String
 type Sentence = [Word]
@@ -105,13 +106,10 @@ createPureSentence = map $ intercalate " "
 addPermutations :: [Sentence] -> [Sentence]
 addPermutations ss = concat $ map permutations ss
 
---Example input for test: ["I", "love", "you"]
 main = do 
-    putStrLn "Hello"
+    args <- getArgs
     dic <- dictCharCounts
-    line <- getLine
 
-    let ss = read line :: Sentence
-    let testResult = sentenceAnagrams ss dic
+    let testResult = sentenceAnagrams (words $ args!!0) dic
 
     mapM_ putStrLn testResult
