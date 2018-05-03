@@ -71,22 +71,22 @@ subtractCounts (c:cs) cs' = if findResult == 0 then c:(subtractCounts cs cs') el
 sentenceAnagrams :: Sentence -> Dictionary -> [String]
 sentenceAnagrams s dic = createPureSentence $ addPermutations (concat $ map createSentence $ map dropDash getSentenceWords)
     where
-        getSentenceWords = filter isIncludesDash (test dic $ sentenceCharCounts s)
-        test :: Dictionary -> CharCount -> [[[Word]]]
-        test dic cc =  map test4 (test' cc)
-        test' :: CharCount -> [([Word], CharCount)]
-        test' []  = []
-        test' cc' = let words = filter (\x -> x /= []) $ map (dictWordsByCharCounts dic) (charCountsSubsets cc')
-                        rests = map (\x -> subtractCounts cc' (wordCharCounts $ x !! 0)) words
-                        in zip words rests
-        test4 :: ([Word], CharCount) -> [[Word]]
-        test4 wcc = [fst wcc] ++ (test3 $ test' (snd wcc))
-        test3 :: [([Word], CharCount)] -> [[Word]]
-        test3 []         = []
-        test3 xs@(x:xs') = (test2 x) ++ [(fst x)]
-        test2 :: ([Word], CharCount) -> [[Word]]
-        test2 (ws,[]) = [["-"]]
-        test2 (_,x)   = test3 $ test' x
+        getSentenceWords = filter isIncludesDash (wordTree dic $ sentenceCharCounts s)
+        wordTree :: Dictionary -> CharCount -> [[[Word]]] --creates all possible sentences in the form of word tree
+        wordTree dic cc =  map throughToTail (getPwwrp cc)
+        getPwwrp :: CharCount -> [([Word], CharCount)] --getPwwrp stand for getPossibleWordsWithRemaningPart
+        getPwwrp []  = []
+        getPwwrp cc' = let words = filter (\x -> x /= []) $ map (dictWordsByCharCounts dic) (charCountsSubsets cc')
+                           rests = map (\x -> subtractCounts cc' (wordCharCounts $ x !! 0)) words
+                           in zip words rests
+        throughToTail :: ([Word], CharCount) -> [[Word]] --collects words to obtain sentence through to tail beyond the one path
+        throughToTail wcc = [fst wcc] ++ (throughToTail' $ getPwwrp (snd wcc))
+        throughToTail' :: [([Word], CharCount)] -> [[Word]]
+        throughToTail' []         = []
+        throughToTail' xs@(x:xs') = (throughToTail'' x) ++ [(fst x)]
+        throughToTail'' :: ([Word], CharCount) -> [[Word]]
+        throughToTail'' (ws,[]) = [["-"]]
+        throughToTail'' (_,x)   = throughToTail' $ getPwwrp x
         isIncludesDash []        = False
         isIncludesDash (c:cs) = if c == ["-"] then True else isIncludesDash cs
         dropDash :: [Sentence] -> [Sentence]
