@@ -125,8 +125,8 @@ Baslangicta cumlemizin "I am tea" oldugunu dusunelim.
 		Bu iki deger zip lenerek "Kelime - Kalan Kısım" pair'i olusturulur.
 	3- Kalan Kısım CharCount'lari icin de bu adım devam ettilerek anlamlı bir kelime olusmayasaya kadar VEYA 
 		hic kalan kisim CharCount'u olmasaya kadar bu recursion devam eder. (throughToTail üçlüsü bu recursion'u yapar)
-	4- throughToTail'' fonksiyonunda eger arta kalan hic CharCount yoksa o zaman ana cumledeki butun CharCount'lari
-		kullanarak kelimeler olusturdugumuz icin bu bizim icin anlamli bir path'dir.
+	4- throughToTail'' fonksiyonunda eger arta kalan hic CharCount yoksa o zaman ["-"] sekilinde bir belirtecle doner.
+		Ana cumledeki butun CharCount'lari kullanarak kelimeler olusturdugumuz icin bu bizim icin anlamli bir path olur.
 	5- throughToTail' fonksiyonu ise anlamli bir kelime olusturulamayan CharCount'lar icin bos liste doner.
 	6- getSentenceWords fonksiyonunda butun wordTree'yi elde ettikten sonra icerisinde "-" icerenler anlamlı path'lerdi
 		o yuzden icinde "-" olanlari filtreleyip daha sonra dropDash ile kaldiriyoruz.
@@ -137,7 +137,7 @@ Baslangicta cumlemizin "I am tea" oldugunu dusunelim.
 			[["ate","eat","tea"],["am"],["i"]]  ve  [["Mae"],["at"],["i"]] olmak uzere iki farkli cumle olusturulabilir
 		Ama [["ate","eat","tea"],["am"],["i"]] sonucunda, aynı CharCount'a sahip farklı kelimeler oldugu icin bunun kombinasyonunu da hesaplanarak
 		cumleler icin Word array'lerine karar verilir. 
-	7- Kombinasyonları hesaplayan createSentence fonksiyonudur. 
+	7- Kombinasyonları hesaplayan createSentence fonksiyonudur. Nasıl hesaplandigi createSentence'da aciklanmistir.
 	8- Eger varsa kombinasyon durumlari da hesaplandiktan sonra bir de kelimelerin yerleri degistirilerek olusturulabilecek cumleler elde edilir.
 		(addPermutations fonksiyonu)
 	9- Kelime arraylari [Word] seklinde olan herbir "Sentence" icin kelimelerin aralarına bosluklar eklenerek String tipinde duzenleme yapilir.
@@ -173,14 +173,15 @@ sentenceAnagrams s dic = createPureSentence $ addPermutations (concat $ map crea
         dropDash ss = filter (\x -> x /= ["-"]) ss
 {-
 *** Implementation: 
-	1- "transpose" fonksiyonunu kullanabilmek icin veriyi uygun formata getirmek gerekti. Bunun icin de:
+	1- Hesaplama icin transpose fonksiyonunun kolaylık saglayacagi dusunuldu fakat "transpose" 
+	fonksiyonunu kullanabilmek icin veriyi uygun formata getirmek gerekti. Bunun icin de:
 		a- Eger aynı CharCount'a sahip kelime listesi varsa, o zaman diger kelimelerle cumle olusturulabilmesi icin
 		genisletilmesi lazım. Ornegin;
 			[["ate","eat","tea"],["am"],["i"]] verisi transpose fonksiyonuna;
 			[["ate","eat","tea"],["am","am","am"],["i","i","i"]] olarak verilirse
 			[["ate","am","i"],["eat","am","i"],["tea","am","i"]] olarak cikar.
 	2- Bu yuzden gelen islenmemis verinin "en küçük ortak kat"/"least common multiple" bulunur ve 
-		transpose'u alınamdan once (EKOK/Kendi Boyu) oranı seklinde genisletilir.
+		transpose'u alınmadan once (EKOK/Kendi Boyu) oranı seklinde genisletilir.
 	3- Mesela "am" gibi "ma"nın da anlamlı bir kelime oldugunu varsayarsak;
 			[["ate","eat","tea"],["am","ma"],["i"]] verisi transpose fonksiyonuna;
 			[["ate","eat","tea","ate","eat","tea"],["am","ma","am","ma","am","ma"],["i","i","i","i","i","i"]] olarak verilirse
