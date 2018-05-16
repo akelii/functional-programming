@@ -10,6 +10,12 @@ type Word = String
 empty :: Trie
 empty = Trie {end = True, children = Map.empty}
 
+insert :: Word -> Trie -> Trie
+insert (x:xs) t
+    | xs == []                                             = Trie {end = True, children = Map.insert x empty (children t)} 
+    | fromMaybe empty (Map.lookup x $ children t) == empty = Trie {end = False, children = Map.insert x (insert xs (fromMaybe empty $ Map.lookup x (children t))) (children t)} 
+    | otherwise                                            = insert xs $ fromJust (Map.lookup x $ children t)
+
 {-
 insertList :: [Word] -> Trie
 insertList = undefined
