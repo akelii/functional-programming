@@ -16,10 +16,10 @@ insert (x:xs) t
     | fromMaybe empty (Map.lookup x $ children t) == empty = Trie {end = False, children = Map.insert x (insert xs (fromMaybe empty $ Map.lookup x (children t))) (children t)} 
     | otherwise                                            = insert xs $ fromJust (Map.lookup x $ children t)
 
-{-
 insertList :: [Word] -> Trie
-insertList = undefined
+insertList ws = foldr insert empty ws
 
+{-
 search :: Word -> Trie -> Bool
 search = undefined
 
