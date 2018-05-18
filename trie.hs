@@ -20,10 +20,15 @@ insert (x:xs) t
 insertList :: [Word] -> Trie
 insertList ws = foldr insert empty $ reverse ws
 
-{-
 search :: Word -> Trie -> Bool
-search = undefined
+search [] _     = False
+search (x:xs) t
+    | xs == [] && (Map.lookup x $ children t) == Nothing  = False
+    | xs == []                                            = if (end t) == True then True else False
+    | (Map.lookup x $ children t) == Nothing              = False
+    | otherwise                                           = search xs $ fromJust (Map.lookup x $ children t)
 
+{-
 getWords :: Trie -> [Word]
 getWords = undefined
 
