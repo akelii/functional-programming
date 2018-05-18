@@ -18,7 +18,7 @@ insert (x:xs) t
     | otherwise                              = Trie {end = (end t), children = Map.insert x (insert xs $ fromJust (Map.lookup x $ children t)) (children t)}
 
 insertList :: [Word] -> Trie
-insertList ws = foldr insert empty ws
+insertList ws = foldr insert empty $ reverse ws
 
 {-
 search :: Word -> Trie -> Bool
