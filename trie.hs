@@ -36,7 +36,7 @@ getWords t = nub $ map reverse $ helper [] [] t
         helper cs ws t
             | t == empty      = (cs:ws)
             | (end t) == True = ws ++ concat (map (\(c,t') -> helper (c:cs) ((c:cs):ws) t') (Map.toList $ children t))
-            | otherwise       = ws ++ concat (map (\(c,t') -> helper (c:cs) ws t') $ (Map.toList $ children t)
+            | otherwise       = ws ++ concat (map (\(c,t') -> helper (c:cs) ws t') $ (Map.toList $ children t))
 
 {-
 prefix :: Word -> Trie -> Maybe [Word]
