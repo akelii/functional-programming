@@ -38,7 +38,12 @@ getWords t = nub $ map reverse $ helper [] [] t
             | (end t) == True = ws ++ concat (map (\(c,t') -> helper (c:cs) ((c:cs):ws) t') (Map.toList $ children t))
             | otherwise       = ws ++ concat (map (\(c,t') -> helper (c:cs) ws t') $ (Map.toList $ children t))
 
-{-
 prefix :: Word -> Trie -> Maybe [Word]
-prefix = undefined
--}
+prefix w t = (prefix' w t)
+    where
+        prefix' :: Word -> Trie -> Maybe [Word]
+        prefix' [] t' = Just $ map ((++) w) (getWords t')
+        prefix' (x:xs) t'
+            | (Map.lookup x $ children t') == Nothing = Nothing
+            | (end t') == True && xs == []            = Just (w:(fromJust (prefix' xs $ fromJust (Map.lookup x $ children t'))))
+            | otherwise                               = prefix' xs $ fromJust (Map.lookup x $ children t')
