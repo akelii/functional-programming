@@ -1,4 +1,5 @@
 import qualified Data.Map.Strict as Map
+import Data.List (nub)
 import Data.Maybe
 import System.Environment
 import System.IO
@@ -28,10 +29,16 @@ search (x:xs) t
     | (Map.lookup x $ children t) == Nothing              = False
     | otherwise                                           = search xs $ fromJust (Map.lookup x $ children t)
 
-{-
 getWords :: Trie -> [Word]
-getWords = undefined
+getWords t = nub $ map reverse $ helper [] [] t
+    where
+        helper :: [Char] -> [Word] -> Trie -> [Word]
+        helper cs ws t
+            | t == empty      = (cs:ws)
+            | (end t) == True = ws ++ concat (map (\(c,t') -> helper (c:cs) ((c:cs):ws) t') (Map.toList $ children t))
+            | otherwise       = ws ++ concat (map (\(c,t') -> helper (c:cs) ws t') $ (Map.toList $ children t)
 
+{-
 prefix :: Word -> Trie -> Maybe [Word]
 prefix = undefined
 -}
