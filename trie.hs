@@ -55,3 +55,14 @@ convertAction c
     | c `elem` "pP" = Print
     | c `elem` "eE" = Exit
     | otherwise     = NoAction
+
+getInput :: IO (Action, Word)
+getInput = do 
+    putStrLn "Enter the action:"
+    c <- getLine
+    let act = convertAction $ c!!0
+    if (act == Print) || (act == Exit) || (act == NoAction) 
+        then return (act, "")
+        else do putStrLn "Enter word/prefix:"
+                w <- getLine
+                return (convertAction $ c!!0, w)
