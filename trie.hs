@@ -5,8 +5,9 @@ import System.Environment
 import System.IO
 import Prelude hiding (Word)
 
-data Trie = Trie {end :: Bool, children :: Map.Map Char Trie} deriving (Show, Eq)
-type Word = String
+data Trie   = Trie {end :: Bool, children :: Map.Map Char Trie} deriving (Show, Eq)
+data Action = Add | Search | Find | Print | Exit | NoAction deriving (Show, Eq)
+type Word   = String
 
 empty :: Trie
 empty = Trie {end = False, children = Map.empty}
@@ -45,3 +46,12 @@ prefix w t = (prefix' w t)
             | (Map.lookup x $ children t') == Nothing = Nothing
             | (end t') == True && xs == []            = Just (fromJust (prefix' xs $ fromJust (Map.lookup x $ children t')))
             | otherwise                               = prefix' xs $ fromJust (Map.lookup x $ children t')
+
+convertAction :: Char -> Action
+convertAction c
+    | c `elem` "aA" = Add
+    | c `elem` "sS" = Search
+    | c `elem` "fF" = Find
+    | c `elem` "pP" = Print
+    | c `elem` "eE" = Exit
+    | otherwise     = NoAction
