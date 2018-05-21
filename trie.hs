@@ -94,3 +94,14 @@ doAction t = do
 
 getMenu :: IO String
 getMenu = return "a) Add Word\ns) Search Word\nf) Find words with prefix\np) Print all words\ne) Exit"
+
+main = do
+    menu <- getMenu
+    putStrLn menu
+    args <- getArgs
+    let filePath = args !! 0
+    handle <- openFile filePath ReadMode
+    contents <- hGetContents handle
+    let ws = lines contents
+        t  = insertList ws
+    doAction t
